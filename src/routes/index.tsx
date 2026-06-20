@@ -38,7 +38,7 @@ function HomePage() {
   return (
     <div className="min-h-dvh">
       <Header />
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+      <main id="main-content" className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         <section className="grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium text-muted-foreground">
@@ -78,7 +78,6 @@ function HomePage() {
           </div>
 
           <SectionCard
-            ariaLabel="Carbon footprint calculator"
             className="lg:sticky lg:top-24"
             title="Quick calculator"
             description="Takes about 30 seconds. Update any field to recalculate."

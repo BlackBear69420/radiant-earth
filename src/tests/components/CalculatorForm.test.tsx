@@ -32,4 +32,33 @@ describe("CalculatorForm", () => {
     expect(onSubmit).not.toHaveBeenCalled();
     expect(screen.getByText(/must be 0 or more/i)).toBeInTheDocument();
   });
+
+  it("prefills fields from initial values", () => {
+    render(
+      <CalculatorForm
+        initial={{
+          commuteKm: 25,
+          transport: "train",
+          diet: "vegetarian",
+          electricityKwh: 300,
+        }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    expect(screen.getByLabelText(/commute/i)).toHaveValue(25);
+    expect(screen.getByLabelText(/transport/i)).toHaveValue("train");
+    expect(screen.getByLabelText(/diet/i)).toHaveValue("vegetarian");
+    expect(screen.getByLabelText(/electricity/i)).toHaveValue(300);
+  });
+
+  it("rejects values above the maximum", async () => {
+    const onSubmit = vi.fn();
+    render(<CalculatorForm onSubmit={onSubmit} />);
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText(/commute/i), "99999");
+    await user.type(screen.getByLabelText(/electricity/i), "10");
+    await user.click(screen.getByRole("button", { name: /calculate/i }));
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(screen.getByText(/value too large/i)).toBeInTheDocument();
+  });
 });

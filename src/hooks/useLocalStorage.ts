@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -26,7 +26,5 @@ export function useLocalStorage<T>(key: string, initial: T) {
     }
   }, [key, value, hydrated]);
 
-  const reset = useCallback(() => setValue(initial), [initial]);
-
-  return { value, setValue, reset, hydrated } as const;
+  return { value, setValue, hydrated } as const;
 }

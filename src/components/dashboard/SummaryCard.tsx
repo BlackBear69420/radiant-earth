@@ -5,7 +5,7 @@ import { formatKg } from "@/utils/formatters";
 export function SummaryCard({ result }: { result: CarbonResult }) {
   const improvement = result.largest.monthlyKg * 0.2;
   return (
-    <div
+    <section
       className="card-surface relative overflow-hidden p-6 sm:p-8"
       aria-label="Carbon footprint summary"
     >
@@ -40,7 +40,7 @@ export function SummaryCard({ result }: { result: CarbonResult }) {
         </span>{" "}
         of CO₂ equivalent.
       </p>
-    </div>
+    </section>
   );
 }
 

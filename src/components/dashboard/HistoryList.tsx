@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { HistoryEntry } from "@/types/carbon";
 import { formatDate, formatKg } from "@/utils/formatters";
 
@@ -8,6 +9,8 @@ export function HistoryList({
   entries: HistoryEntry[];
   onClear: () => void;
 }) {
+  const clearHintId = useId();
+
   if (entries.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">
@@ -34,7 +37,15 @@ export function HistoryList({
         ))}
       </ul>
       <div>
-        <button onClick={onClear} className="btn-ghost text-sm" type="button">
+        <p id={clearHintId} className="sr-only">
+          Permanently removes all saved calculations from this device.
+        </p>
+        <button
+          onClick={onClear}
+          className="btn-ghost text-sm"
+          type="button"
+          aria-describedby={clearHintId}
+        >
           Clear history
         </button>
       </div>

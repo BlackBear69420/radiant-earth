@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 
 export function SectionCard({
   title,
@@ -6,23 +6,25 @@ export function SectionCard({
   children,
   className = "",
   as: Tag = "section",
-  ariaLabel,
 }: {
   title?: string;
   description?: string;
   children: ReactNode;
   className?: string;
   as?: "section" | "article" | "div";
-  ariaLabel?: string;
 }) {
+  const titleId = useId();
+
   return (
     <Tag
-      aria-label={ariaLabel}
+      aria-labelledby={title ? titleId : undefined}
       className={`card-surface p-6 sm:p-7 ${className}`}
     >
       {title ? (
         <header className="mb-4">
-          <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+          <h2 id={titleId} className="text-lg font-semibold text-foreground">
+            {title}
+          </h2>
           {description ? (
             <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           ) : null}

@@ -11,7 +11,9 @@ export const formatPercent = (n: number): string => {
 
 export const formatDate = (iso: string): string => {
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return iso;
+    return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",

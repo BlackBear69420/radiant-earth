@@ -39,8 +39,10 @@ function DashboardPage() {
     return (
       <div className="min-h-dvh">
         <Header />
-        <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <p className="text-sm text-muted-foreground">Loading…</p>
+        <main id="main-content" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+          <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+            Loading…
+          </p>
         </main>
       </div>
     );
@@ -50,7 +52,7 @@ function DashboardPage() {
     return (
       <div className="min-h-dvh">
         <Header />
-        <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+        <main id="main-content" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <SectionCard
             title="No data yet"
             description="Add your lifestyle details on the calculator to see your dashboard."
@@ -67,7 +69,7 @@ function DashboardPage() {
   return (
     <div className="min-h-dvh">
       <Header />
-      <main className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
+      <main id="main-content" className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -97,7 +99,6 @@ function DashboardPage() {
           <SectionCard
             title="Update your inputs"
             description="Recalculate with new lifestyle data."
-            ariaLabel="Update inputs"
           >
             <div id="edit-panel">
               <CalculatorForm

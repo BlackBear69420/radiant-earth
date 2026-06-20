@@ -23,7 +23,7 @@ const sanitizeNumber = (n: number): number => {
   return Math.min(n, 1_000_000);
 };
 
-export const calculateCategoryEmissions = (input: CarbonInput) => {
+const calculateCategoryEmissions = (input: CarbonInput) => {
   const km = sanitizeNumber(input.commuteKm);
   const kwh = sanitizeNumber(input.electricityKwh);
 

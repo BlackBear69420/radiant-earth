@@ -1,8 +1,7 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
-  createRootRouteWithContext,
+  createRootRoute,
   useRouter,
   HeadContent,
   Scripts,
@@ -12,10 +11,13 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
+const SITE_DESCRIPTION =
+  "Estimate, track, and reduce your monthly carbon footprint with MyCarbon — a private, on-device tracker.";
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
+      <main className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -29,7 +31,7 @@ function NotFoundComponent() {
             Go home
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
@@ -43,7 +45,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
+      <main className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
           This page didn't load
         </h1>
@@ -67,34 +69,38 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             Go home
           </a>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#1f7a4d" },
       { title: "MyCarbon — Personal Carbon Footprint Tracker" },
-      {
-        name: "description",
-        content:
-          "Estimate, track, and reduce your monthly carbon footprint with MyCarbon — a private, on-device tracker.",
-      },
+      { name: "description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "MyCarbon — Personal Carbon Footprint Tracker" },
       { name: "twitter:title", content: "MyCarbon — Personal Carbon Footprint Tracker" },
-      { name: "description", content: "My Carbon Buddy helps users track and reduce their personal carbon footprint with local data." },
-      { property: "og:description", content: "My Carbon Buddy helps users track and reduce their personal carbon footprint with local data." },
-      { name: "twitter:description", content: "My Carbon Buddy helps users track and reduce their personal carbon footprint with local data." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d0cbc675-8783-44b8-b409-0ccc34c852c2/id-preview-e25373f7--9a6b6f57-dffe-47b4-8fd2-23423d6dfe1d.lovable.app-1781966840823.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d0cbc675-8783-44b8-b409-0ccc34c852c2/id-preview-e25373f7--9a6b6f57-dffe-47b4-8fd2-23423d6dfe1d.lovable.app-1781966840823.png" },
+      { property: "og:description", content: SITE_DESCRIPTION },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d0cbc675-8783-44b8-b409-0ccc34c852c2/id-preview-e25373f7--9a6b6f57-dffe-47b4-8fd2-23423d6dfe1d.lovable.app-1781966840823.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d0cbc675-8783-44b8-b409-0ccc34c852c2/id-preview-e25373f7--9a6b6f57-dffe-47b4-8fd2-23423d6dfe1d.lovable.app-1781966840823.png",
+      },
     ],
     links: [
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -112,11 +118,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+        >
+          Skip to main content
+        </a>
         {children}
         <Scripts />
       </body>
@@ -125,12 +137,5 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-    </QueryClientProvider>
-  );
+  return <Outlet />;
 }
