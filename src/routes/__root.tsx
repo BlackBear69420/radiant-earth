@@ -86,6 +86,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "MyCarbon — Personal Carbon Footprint Tracker" },
+      { name: "twitter:title", content: "MyCarbon — Personal Carbon Footprint Tracker" },
+      { name: "description", content: "My Carbon Buddy helps users track and reduce their personal carbon footprint with local data." },
+      { property: "og:description", content: "My Carbon Buddy helps users track and reduce their personal carbon footprint with local data." },
+      { name: "twitter:description", content: "My Carbon Buddy helps users track and reduce their personal carbon footprint with local data." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d0cbc675-8783-44b8-b409-0ccc34c852c2/id-preview-e25373f7--9a6b6f57-dffe-47b4-8fd2-23423d6dfe1d.lovable.app-1781966840823.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d0cbc675-8783-44b8-b409-0ccc34c852c2/id-preview-e25373f7--9a6b6f57-dffe-47b4-8fd2-23423d6dfe1d.lovable.app-1781966840823.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
