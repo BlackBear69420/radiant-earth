@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, formatKg, formatPercent } from "@/utils/formatters";
+import { formatDate, formatKg, formatPercent, formatShortDate } from "@/utils/formatters";
 
 describe("formatters", () => {
   describe("formatKg", () => {
@@ -35,6 +35,14 @@ describe("formatters", () => {
 
     it("returns the original string for invalid dates", () => {
       expect(formatDate("not-a-date")).toBe("not-a-date");
+    });
+  });
+
+  describe("formatShortDate", () => {
+    it("formats month and day only", () => {
+      const result = formatShortDate("2026-06-20T14:30:00.000Z");
+      expect(result).toMatch(/Jun/);
+      expect(result).not.toMatch(/2026/);
     });
   });
 });

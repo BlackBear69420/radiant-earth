@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { MAX_HISTORY_ENTRIES } from "@/constants/appConfig";
 import { calculateCarbon } from "@/services/carbonCalculator";
 import { generateRecommendations } from "@/utils/recommendationEngine";
 import type { CarbonInput, CarbonResult, HistoryEntry } from "@/types/carbon";
@@ -6,7 +7,6 @@ import { useLocalStorage } from "./useLocalStorage";
 
 const HISTORY_KEY = "mycarbon.history.v1";
 const LATEST_KEY = "mycarbon.latest.v1";
-const MAX_HISTORY = 20;
 
 export function useCarbonCalculator() {
   const history = useLocalStorage<HistoryEntry[]>(HISTORY_KEY, []);
@@ -24,7 +24,7 @@ export function useCarbonCalculator() {
         result,
       };
       latest.setValue(result);
-      history.setValue((prev) => [entry, ...prev].slice(0, MAX_HISTORY));
+      history.setValue((prev) => [entry, ...prev].slice(0, MAX_HISTORY_ENTRIES));
       return result;
     },
     [history, latest],

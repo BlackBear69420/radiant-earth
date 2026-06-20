@@ -1,71 +1,72 @@
-import type { CarbonResult, Recommendation } from "@/types/carbon";
+import { IMPROVEMENT_POTENTIAL_FACTOR, RECOMMENDATION_SAVINGS } from "@/constants/appConfig";
+import type { CarbonResult, CategoryKey, Recommendation } from "@/types/carbon";
 
-const uid = (() => {
-  let i = 0;
-  return () => `rec-${++i}`;
-})();
+const recommendationId = (category: CategoryKey, title: string): string =>
+  `${category}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
-export const generateRecommendations = (
-  result: CarbonResult,
-): Recommendation[] => {
+export const generateRecommendations = (result: CarbonResult): Recommendation[] => {
   const recs: Recommendation[] = [];
   const byCategory = Object.fromEntries(
     result.breakdown.map((b) => [b.key, b.monthlyKg]),
-  ) as Record<string, number>;
+  ) as Record<CategoryKey, number>;
 
   if (byCategory.transportation > 0) {
-    const saving = byCategory.transportation * 0.25;
+    const title = "Swap two car trips for public transport each week";
     recs.push({
-      id: uid(),
+      id: recommendationId("transportation", title),
       category: "transportation",
-      title: "Swap two car trips for public transport each week",
+      title,
       description:
         "Replacing two weekly car commutes with bus or train can cut a quarter of your transport emissions.",
-      estimatedMonthlySavingKg: saving,
+      estimatedMonthlySavingKg: byCategory.transportation * RECOMMENDATION_SAVINGS.transportation,
     });
   }
 
   if (result.input.diet === "nonVegetarian") {
+    const title = "Try two meat-free days per week";
     recs.push({
-      id: uid(),
+      id: recommendationId("diet", title),
       category: "diet",
-      title: "Try two meat-free days per week",
-      description:
-        "Reducing meat by two days per week noticeably lowers diet-related emissions.",
-      estimatedMonthlySavingKg: byCategory.diet * 0.2,
+      title,
+      description: "Reducing meat by two days per week noticeably lowers diet-related emissions.",
+      estimatedMonthlySavingKg: byCategory.diet * RECOMMENDATION_SAVINGS.dietNonVegetarian,
     });
   } else if (result.input.diet === "mixed") {
+    const title = "Add one more vegetarian day per week";
     recs.push({
-      id: uid(),
+      id: recommendationId("diet", title),
       category: "diet",
-      title: "Add one more vegetarian day per week",
-      description:
-        "Shifting one extra day to plant-based meals trims your monthly footprint.",
-      estimatedMonthlySavingKg: byCategory.diet * 0.1,
+      title,
+      description: "Shifting one extra day to plant-based meals trims your monthly footprint.",
+      estimatedMonthlySavingKg: byCategory.diet * RECOMMENDATION_SAVINGS.dietMixed,
     });
   }
 
   if (byCategory.electricity > 0) {
+    const title = "Lower electricity usage by 10%";
     recs.push({
-      id: uid(),
+      id: recommendationId("electricity", title),
       category: "electricity",
-      title: "Lower electricity usage by 10%",
-      description:
-        "Unplug idle devices, switch to LED bulbs, and use energy-efficient appliances.",
-      estimatedMonthlySavingKg: byCategory.electricity * 0.1,
+      title,
+      description: "Unplug idle devices, switch to LED bulbs, and use energy-efficient appliances.",
+      estimatedMonthlySavingKg: byCategory.electricity * RECOMMENDATION_SAVINGS.electricity,
     });
   }
 
-  // Always include a positive nudge based on the largest contributor
   if (result.totalMonthlyKg > 0) {
+    const title = `Focus first on ${result.largest.label.toLowerCase()}`;
     recs.unshift({
-      id: uid(),
+      id: recommendationId(result.largest.key, title),
       category: result.largest.key,
-      title: `Focus first on ${result.largest.label.toLowerCase()}`,
+      title,
       description: `${result.largest.label} is your largest source of emissions this month. Small changes here have the biggest impact.`,
-      estimatedMonthlySavingKg: result.largest.monthlyKg * 0.15,
+      estimatedMonthlySavingKg: result.largest.monthlyKg * RECOMMENDATION_SAVINGS.largestFocus,
     });
   }
 
   return recs;
 };
+
+/** Shared heuristic for the dashboard summary “improvement potential” stat. */
+export const estimateImprovementPotential = (largestMonthlyKg: number): number =>
+  largestMonthlyKg * IMPROVEMENT_POTENTIAL_FACTOR;

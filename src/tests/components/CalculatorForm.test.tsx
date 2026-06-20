@@ -61,4 +61,13 @@ describe("CalculatorForm", () => {
     expect(onSubmit).not.toHaveBeenCalled();
     expect(screen.getByText(/value too large/i)).toBeInTheDocument();
   });
+
+  it("shows validation errors for empty numeric fields", async () => {
+    const onSubmit = vi.fn();
+    render(<CalculatorForm onSubmit={onSubmit} />);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: /calculate/i }));
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(screen.getAllByText(/enter a number/i).length).toBeGreaterThan(0);
+  });
 });

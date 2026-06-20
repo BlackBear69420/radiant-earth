@@ -26,9 +26,7 @@ export function RecommendationList({ items }: { items: Recommendation[] }) {
             </span>
             <div className="flex-1">
               <h3 className="font-semibold text-foreground">{r.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {r.description}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{r.description}</p>
               {r.estimatedMonthlySavingKg > 0 ? (
                 <p className="mt-2 inline-flex items-center gap-1 rounded-md bg-leaf/15 px-2 py-1 text-xs font-semibold text-foreground">
                   Potential saving: ~{formatKg(r.estimatedMonthlySavingKg)} / month

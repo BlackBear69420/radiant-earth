@@ -1,26 +1,16 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { HISTORY_CHART_POINTS } from "@/constants/appConfig";
 import type { HistoryEntry } from "@/types/carbon";
-import { formatKg } from "@/utils/formatters";
+import { formatKg, formatShortDate } from "@/utils/formatters";
 
 export function HistoryChart({ entries }: { entries: HistoryEntry[] }) {
   const data = [...entries]
     .reverse()
-    .slice(-10)
-    .map((e, i) => ({
-      name: new Date(e.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
+    .slice(-HISTORY_CHART_POINTS)
+    .map((e) => ({
+      name: formatShortDate(e.createdAt),
       value: Number(e.result.totalMonthlyKg.toFixed(1)),
-      key: e.id + i,
+      key: e.id,
     }));
 
   if (data.length < 2) {
@@ -31,9 +21,7 @@ export function HistoryChart({ entries }: { entries: HistoryEntry[] }) {
     );
   }
 
-  const description = data
-    .map((d) => `${d.name}: ${formatKg(d.value)}`)
-    .join(", ");
+  const description = data.map((d) => `${d.name}: ${formatKg(d.value)}`).join(", ");
 
   return (
     <div>
@@ -55,11 +43,7 @@ export function HistoryChart({ entries }: { entries: HistoryEntry[] }) {
               }}
               formatter={(v: number) => formatKg(v)}
             />
-            <Bar
-              dataKey="value"
-              fill="var(--color-chart-1)"
-              radius={[8, 8, 0, 0]}
-            />
+            <Bar dataKey="value" fill="var(--color-chart-1)" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

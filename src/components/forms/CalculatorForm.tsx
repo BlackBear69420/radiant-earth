@@ -1,25 +1,12 @@
 import { useId, useState, type FormEvent } from "react";
-import { z } from "zod";
 import {
   DIET_LABELS,
   TRANSPORT_LABELS,
   type DietType,
   type TransportMode,
 } from "@/constants/emissionFactors";
+import { carbonInputSchema } from "@/schemas/calculatorSchema";
 import type { CarbonInput } from "@/types/carbon";
-
-const schema = z.object({
-  commuteKm: z
-    .number({ invalid_type_error: "Enter a number" })
-    .min(0, "Must be 0 or more")
-    .max(10000, "Value too large"),
-  transport: z.enum(["car", "bus", "train", "bike", "walk"]),
-  diet: z.enum(["vegetarian", "mixed", "nonVegetarian"]),
-  electricityKwh: z
-    .number({ invalid_type_error: "Enter a number" })
-    .min(0, "Must be 0 or more")
-    .max(100000, "Value too large"),
-});
 
 type FormErrors = Partial<Record<keyof CarbonInput, string>>;
 
@@ -36,22 +23,18 @@ export function CalculatorForm({
 }: CalculatorFormProps) {
   const formId = useId();
   const [commute, setCommute] = useState(String(initial?.commuteKm ?? ""));
-  const [transport, setTransport] = useState<TransportMode>(
-    initial?.transport ?? "car",
-  );
+  const [transport, setTransport] = useState<TransportMode>(initial?.transport ?? "car");
   const [diet, setDiet] = useState<DietType>(initial?.diet ?? "mixed");
-  const [electricity, setElectricity] = useState(
-    String(initial?.electricityKwh ?? ""),
-  );
+  const [electricity, setElectricity] = useState(String(initial?.electricityKwh ?? ""));
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handle = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const parsed = schema.safeParse({
-      commuteKm: Number(commute),
+    const parsed = carbonInputSchema.safeParse({
+      commuteKm: commute === "" ? Number.NaN : Number(commute),
       transport,
       diet,
-      electricityKwh: Number(electricity),
+      electricityKwh: electricity === "" ? Number.NaN : Number(electricity),
     });
     if (!parsed.success) {
       const next: FormErrors = {};
@@ -70,7 +53,12 @@ export function CalculatorForm({
   const errId = (n: string) => `${formId}-${n}-err`;
 
   return (
-    <form noValidate onSubmit={handle} className="grid gap-5" aria-label="Carbon footprint calculator">
+    <form
+      noValidate
+      onSubmit={handle}
+      className="grid gap-5"
+      aria-label="Carbon footprint calculator"
+    >
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor={fieldId("commute")} className="field-label">
@@ -148,9 +136,7 @@ export function CalculatorForm({
             onChange={(e) => setElectricity(e.target.value)}
             className="field-input"
             aria-invalid={!!errors.electricityKwh}
-            aria-describedby={
-              errors.electricityKwh ? errId("electricity") : undefined
-            }
+            aria-describedby={errors.electricityKwh ? errId("electricity") : undefined}
             required
           />
           {errors.electricityKwh ? (

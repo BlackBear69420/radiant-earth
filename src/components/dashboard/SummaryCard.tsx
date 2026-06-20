@@ -1,9 +1,11 @@
 import { TrendingDown, Flame, Calendar } from "lucide-react";
+import type { ReactNode } from "react";
 import type { CarbonResult } from "@/types/carbon";
 import { formatKg } from "@/utils/formatters";
+import { estimateImprovementPotential } from "@/utils/recommendationEngine";
 
 export function SummaryCard({ result }: { result: CarbonResult }) {
-  const improvement = result.largest.monthlyKg * 0.2;
+  const improvement = estimateImprovementPotential(result.largest.monthlyKg);
   return (
     <section
       className="card-surface relative overflow-hidden p-6 sm:p-8"
@@ -35,10 +37,8 @@ export function SummaryCard({ result }: { result: CarbonResult }) {
       </div>
       <p className="mt-6 text-sm text-muted-foreground">
         Annual estimate:{" "}
-        <span className="font-semibold text-foreground">
-          {formatKg(result.totalYearlyKg)}
-        </span>{" "}
-        of CO₂ equivalent.
+        <span className="font-semibold text-foreground">{formatKg(result.totalYearlyKg)}</span> of
+        CO₂ equivalent.
       </p>
     </section>
   );
@@ -51,7 +51,7 @@ function Stat({
   sub,
   accent,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   value: string;
   sub?: string;
@@ -66,12 +66,8 @@ function Stat({
       >
         {icon}
       </div>
-      <p className="text-xs uppercase tracking-wider text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-1 text-2xl font-semibold text-foreground sm:text-3xl">
-        {value}
-      </p>
+      <p className="text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="mt-1 text-2xl font-semibold text-foreground sm:text-3xl">{value}</p>
       {sub ? <p className="mt-1 text-sm text-muted-foreground">{sub}</p> : null}
     </div>
   );

@@ -9,16 +9,31 @@ export const formatPercent = (n: number): string => {
   return `${n.toFixed(0)}%`;
 };
 
+const DATE_LOCALE = "en-US";
+
 export const formatDate = (iso: string): string => {
   try {
     const date = new Date(iso);
     if (Number.isNaN(date.getTime())) return iso;
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(DATE_LOCALE, {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
+};
+
+export const formatShortDate = (iso: string): string => {
+  try {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return iso;
+    return date.toLocaleDateString(DATE_LOCALE, {
+      month: "short",
+      day: "numeric",
     });
   } catch {
     return iso;

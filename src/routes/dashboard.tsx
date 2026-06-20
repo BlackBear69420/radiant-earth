@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Header } from "@/components/common/Header";
+import { AppShell } from "@/components/common/AppShell";
 import { SectionCard } from "@/components/common/SectionCard";
 import { CalculatorForm } from "@/components/forms/CalculatorForm";
 import { BreakdownChart } from "@/components/charts/BreakdownChart";
@@ -10,6 +10,8 @@ import { HistoryList } from "@/components/dashboard/HistoryList";
 import { SummaryCard } from "@/components/dashboard/SummaryCard";
 import { RecommendationList } from "@/components/recommendations/RecommendationList";
 import { useCarbonCalculator } from "@/hooks/useCarbonCalculator";
+
+const DASHBOARD_FOOTER = "Estimates are based on locally-stored, illustrative emission factors.";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -37,21 +39,19 @@ function DashboardPage() {
 
   if (!hydrated) {
     return (
-      <div className="min-h-dvh">
-        <Header />
+      <AppShell footer={DASHBOARD_FOOTER}>
         <main id="main-content" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
           <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
             Loading…
           </p>
         </main>
-      </div>
+      </AppShell>
     );
   }
 
   if (!latest) {
     return (
-      <div className="min-h-dvh">
-        <Header />
+      <AppShell footer={DASHBOARD_FOOTER}>
         <main id="main-content" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <SectionCard
             title="No data yet"
@@ -62,22 +62,17 @@ function DashboardPage() {
             </Link>
           </SectionCard>
         </main>
-      </div>
+      </AppShell>
     );
   }
 
   return (
-    <div className="min-h-dvh">
-      <Header />
+    <AppShell footer={DASHBOARD_FOOTER}>
       <main id="main-content" className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Your dashboard
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Based on your most recent inputs.
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Your dashboard</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Based on your most recent inputs.</p>
           </div>
           <div className="flex gap-2">
             <Link to="/" className="btn-ghost">
@@ -130,10 +125,7 @@ function DashboardPage() {
           </SectionCard>
         </div>
 
-        <SectionCard
-          title="Your trend"
-          description="How your calculations compare over time."
-        >
+        <SectionCard title="Your trend" description="How your calculations compare over time.">
           <HistoryChart entries={history} />
         </SectionCard>
 
@@ -141,9 +133,6 @@ function DashboardPage() {
           <HistoryList entries={history} onClear={clearHistory} />
         </SectionCard>
       </main>
-      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Estimates are based on locally-stored, illustrative emission factors.
-      </footer>
-    </div>
+    </AppShell>
   );
 }

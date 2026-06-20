@@ -9,9 +9,7 @@ export function Header() {
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-leaf text-leaf-foreground shadow-soft">
             <Leaf className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="font-display text-lg font-semibold tracking-tight">
-            MyCarbon
-          </span>
+          <span className="font-display text-lg font-semibold tracking-tight">MyCarbon</span>
         </Link>
         <nav aria-label="Primary">
           <ul className="flex items-center gap-1 sm:gap-2 text-sm font-medium">

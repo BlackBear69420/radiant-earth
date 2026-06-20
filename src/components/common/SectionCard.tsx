@@ -25,9 +25,7 @@ export function SectionCard({
           <h2 id={titleId} className="text-lg font-semibold text-foreground">
             {title}
           </h2>
-          {description ? (
-            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-          ) : null}
+          {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
         </header>
       ) : null}
       {children}
